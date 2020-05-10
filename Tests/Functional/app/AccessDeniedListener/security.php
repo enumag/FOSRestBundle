@@ -24,27 +24,21 @@ $container->loadFromExtension('security', [
             'memory' => [
                 'users' => [
                     'restapi' => ['password' => 'secretpw', 'roles' => ['ROLE_API']],
-                    'admin' => ['password' => 'secretpw', 'roles' => ['ROLE_ADMIN']],
                 ],
             ],
         ],
     ],
     'firewalls' => [
-        'api' => array_merge($defaultFirewall, [
-            'pattern' => '^/api',
-            'stateless' => true,
-            'http_basic' => ['realm' => 'Demo REST API'],
-            'json_login' => [
+        'default' => array_merge($defaultFirewall, [
+            'provider' => 'in_memory',
+            'anonymous' => 'lazy',
+            'form_login' => [
+                'login_path' => '/api/login',
                 'check_path' => '/api/login',
             ],
         ]),
-        'default' => array_merge($defaultFirewall, [
-            'anonymous' => null,
-            'form_login' => null,
-        ]),
     ],
     'access_control' => [
-        ['path' => '^/admin', 'roles' => 'ROLE_ADMIN'],
         ['path' => '^/api', 'roles' => 'ROLE_API'],
     ],
 ]);
